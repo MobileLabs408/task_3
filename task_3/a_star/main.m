@@ -1,6 +1,6 @@
 %==========================================================================
 % Author: Carl Larsson
-% Description: Main file for path planing
+% Description: Main file for A*
 % Date: 2024-04-11
 
 % This software is licensed under the MIT License
@@ -9,6 +9,7 @@
 
 %--------------------------------------------------------------------------
 %% Clean up
+%--------------------------------------------------------------------------
 
 close all
 clear
@@ -18,18 +19,28 @@ clc
 %% Load data
 %--------------------------------------------------------------------------
 
-maze = load("../Maze.mat");
+maze = load("../mazes/Maze1.mat");
 
 %--------------------------------------------------------------------------
 %% Path planing
 %--------------------------------------------------------------------------
 
-path = A_star(maze.Maze.map, maze.Maze.start, maze.Maze.goal);
+tic;
+[path, push, pop] = A_star(maze.Maze.map, maze.Maze.start, maze.Maze.goal);
+execution_time = toc;
 
 %--------------------------------------------------------------------------
 %% Plot resulting path
 %--------------------------------------------------------------------------
 
 plot_map_and_path(maze.Maze.map, maze.Maze.start, maze.Maze.goal, path);
+
+%--------------------------------------------------------------------------
+%% Print execution time, pushes and pops
+%--------------------------------------------------------------------------
+
+disp(['Execution time: ', num2str(execution_time), ' (s)'])
+disp(['Number of pushes to open list: ', num2str(push)])
+disp(['Number of pops to open list: ', num2str(pop)])
 
 %--------------------------------------------------------------------------

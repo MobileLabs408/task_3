@@ -9,6 +9,10 @@
 
 function heuristic = A_star_heuristic(current_position, goal_position)
 
+    % Euclidean distance
     heuristic = norm(current_position-goal_position);
+    
+    % Having heuristic = 0 makes A* = Djisktra
+    %heuristic = 0;
 
 end

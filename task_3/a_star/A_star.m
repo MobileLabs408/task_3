@@ -7,7 +7,11 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function path = A_star(map, start_position, goal_position)
+function [path, push, pop] = A_star(map, start_position, goal_position)
+    % used keeping track of the number of pushes and pops 
+    push = 0;
+    pop = 0;
+
     % Define movement cost
     vertical_horizontal_cost = 1;
     diagonal_cost = sqrt(2);
@@ -19,6 +23,8 @@ function path = A_star(map, start_position, goal_position)
     % Initialize open and closed lists
     % Nodes that are yet to be explored (expanded)
     open_list = [start_node];
+    % Push start node
+    push = push + 1;
     % Nodes we have expanded
     closed_list = [];
 
@@ -30,23 +36,16 @@ function path = A_star(map, start_position, goal_position)
     while ~isempty(open_list)
         % Find unexplored (unexpanded) node with lowest estimate total cost (f)
         [~, current_node_idx] = min([open_list.f]);
+        % Pop
         current_node = open_list(current_node_idx);
+        pop = pop + 1;
 
         % Move current node to closed list
         closed_list = [closed_list; current_node.position];
 
         % Check if goal is reached
         if isequal(current_node.position, goal_position)
-            % Reconstruct path from start to goal
-            temp_path = [];
-            % Continously step back into parent node, starting at goal node
-            while ~isempty(current_node)
-                % Inserting in this order will result with start at top and
-                % goal at bottom
-                temp_path = [current_node.position; temp_path];
-                current_node = current_node.parent;
-            end
-            path = temp_path;
+            path = reconstruct_path(current_node);
             return;
         end
         
@@ -86,6 +85,8 @@ function path = A_star(map, start_position, goal_position)
             % If neighbor is not in open list, add it
             if ~any(arrayfun(@(x) isequal(x, neighbor_node), open_list))
                 open_list = [open_list; neighbor_node];
+                % Push
+                push = push + 1;
             % Else if it has lower f value, we have found a better path so
             % we update
             elseif any(arrayfun(@(x) isequal(x, neighbor_node), open_list)) && open_list(find(arrayfun(@(x) isequal(x, neighbor_node), open_list), 1)).f > neighbor_node.f
@@ -103,6 +104,7 @@ function path = A_star(map, start_position, goal_position)
     end
     
     % If no path is found
-    error('No path found');
+    disp("No path found.")
+    path = [];
 
 end

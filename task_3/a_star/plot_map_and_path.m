@@ -7,7 +7,6 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-
 function plot_map_and_path(map, start, goal, path)
 
     % Necessary for plotting the way the task does
