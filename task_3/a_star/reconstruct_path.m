@@ -1,7 +1,7 @@
 %==========================================================================
 % Author: Carl Larsson
 % Description: Reconstruct path taken from start to current node (possibly goal)
-% Date: 2024-04-11
+% Date: 2024-04-26
 
 % This software is licensed under the MIT License
 % Refer to the LICENSE file for details

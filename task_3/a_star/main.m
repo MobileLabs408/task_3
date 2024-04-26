@@ -1,7 +1,7 @@
 %==========================================================================
 % Author: Carl Larsson
 % Description: Main file for A*
-% Date: 2024-04-11
+% Date: 2024-04-25
 
 % This software is licensed under the MIT License
 % Refer to the LICENSE file for details
@@ -19,7 +19,7 @@ clc
 %% Load data
 %--------------------------------------------------------------------------
 
-maze = load("../mazes/Maze1.mat");
+maze = load("../mazes/Maze3.mat");
 
 %--------------------------------------------------------------------------
 %% Path planing

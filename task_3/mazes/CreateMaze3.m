@@ -33,6 +33,11 @@ Maze.map(63,73:77)=inf;
 Maze.map(27:40,50)=inf;
 Maze.map(25:40,75)=inf;
 
+Maze.map(1,1:80)=inf;
+Maze.map(80,1:80)=inf;
+Maze.map(1:80,1)=inf;
+Maze.map(1:80,80)=inf;
+
 Maze.map(35:45,40)=inf; % Vertical wall with deceptive gap (gap leads nowhere)
 Maze.map(40,35:50)=inf; % Connects to previous wall
 

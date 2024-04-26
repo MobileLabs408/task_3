@@ -1,7 +1,7 @@
 %==========================================================================
 % Author: Carl Larsson
 % Description: A* get all neighboring nodes of current node
-% Date: 2024-04-11
+% Date: 2024-04-25
 
 % This software is licensed under the MIT License
 % Refer to the LICENSE file for details
