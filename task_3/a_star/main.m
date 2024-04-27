@@ -1,6 +1,6 @@
 %==========================================================================
 % Author: Carl Larsson
-% Description: Main file for A*
+% Description: Main file for A* in KNOWN environments
 % Date: 2024-04-25
 
 % This software is licensed under the MIT License
@@ -19,7 +19,7 @@ clc
 %% Load data
 %--------------------------------------------------------------------------
 
-maze = load("../mazes/Maze3.mat");
+maze = load("../mazes/Maze.mat");
 
 %--------------------------------------------------------------------------
 %% Path planing

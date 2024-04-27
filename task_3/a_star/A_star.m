@@ -1,6 +1,6 @@
 %==========================================================================
 % Author: Carl Larsson
-% Description: Performs A* in known environment
+% Description: Performs A* in KNOWN environments
 % Date: 2024-04-25
 
 % This software is licensed under the MIT License
@@ -8,7 +8,7 @@
 %==========================================================================
 
 function [path, push, pop] = A_star(map, start_position, goal_position)
-    % used keeping track of the number of pushes and pops 
+    % Used for keeping track of the number of pushes and pops 
     push = 0;
     pop = 0;
 
@@ -36,7 +36,7 @@ function [path, push, pop] = A_star(map, start_position, goal_position)
     while ~isempty(open_list)
         % Find unexplored (unexpanded) node with lowest estimate total cost (f)
         [~, current_node_idx] = min([open_list.f]);
-        % Pop
+        % Pop current node
         current_node = open_list(current_node_idx);
         pop = pop + 1;
 
@@ -84,8 +84,8 @@ function [path, push, pop] = A_star(map, start_position, goal_position)
 
             % If neighbor is not in open list, add it
             if ~any(arrayfun(@(x) isequal(x, neighbor_node), open_list))
+                % Push neighbor node
                 open_list = [open_list; neighbor_node];
-                % Push
                 push = push + 1;
             % Else if it has lower f value, we have found a better path so
             % we update

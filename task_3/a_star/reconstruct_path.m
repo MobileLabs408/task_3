@@ -10,14 +10,13 @@
 function path = reconstruct_path(current_node)
 
     % Reconstruct path from start node to current node
-    temp_path = [];
+    path = [];
     % Continously step back into parent node, starting at current node
     while ~isempty(current_node)
         % Inserting in this order will result with start node at top and
         % current node at bottom
-        temp_path = [current_node.position; temp_path];
+        path = [current_node.position; path];
         current_node = current_node.parent;
     end
-    path = temp_path;
 
 end
