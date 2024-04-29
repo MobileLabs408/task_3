@@ -107,14 +107,14 @@ function [path, obstacle_position, current_position, push, pop] = modified_A_sta
             neighbor_node = struct('position', neighbor_pos, 'g', neighbor_g, 'f', neighbor_f, 'parent', current_node);
 
             % If neighbor is not in open list, add it
-            if ~any(arrayfun(@(x) isequal(x, neighbor_node), open_list))
+            if ~any(arrayfun(@(x) isequal(x.position, neighbor_node.position), open_list))
                 % Push neighbor node
                 open_list = [open_list; neighbor_node];
                 push = push + 1;
             % Else if it has lower f value, we have found a better path so
             % we update
-            elseif any(arrayfun(@(x) isequal(x, neighbor_node), open_list)) && open_list(find(arrayfun(@(x) isequal(x, neighbor_node), open_list), 1)).f > neighbor_node.f
-                open_list(find(arrayfun(@(x) isequal(x, neighbor_node), open_list), 1)) = neighbor_node;
+            elseif any(arrayfun(@(x) isequal(x.position, neighbor_node.position), open_list)) && open_list(find(arrayfun(@(x) isequal(x.position, neighbor_node.position), open_list), 1)).f > neighbor_node.f
+                open_list(find(arrayfun(@(x) isequal(x.position, neighbor_node.position), open_list), 1)) = neighbor_node;
             end
                 
             % Add neighbor to closed list
