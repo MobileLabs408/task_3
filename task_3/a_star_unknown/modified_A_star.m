@@ -36,8 +36,9 @@ function [path, obstacle_position, current_position, push, pop] = modified_A_sta
     % A*
     % Continue while we have unexplored nodes
     while ~isempty(open_list)
-        % Find unexplored (unexpanded) node with lowest estimate total cost (f)
-        [~, current_node_idx] = min([open_list.f]);
+        % Find unexplored (unexpanded) node with lowest estimate total 
+        % cost (f), if multiple then out of these the one with lowest h
+        current_node_idx = find_min_idx(open_list);
         % Pop current node
         current_node = open_list(current_node_idx);
         current_position = current_node.position;
