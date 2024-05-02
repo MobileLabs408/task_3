@@ -44,6 +44,7 @@ function [path, created_map, push, pop] = A_star_unknown(map, start_position, go
             % goal
             path = [path; temp_path];
         end
+        % Add up all pushes and pops from each iteration
         push = push + temp_push;
         pop = pop + temp_pop;
     end
