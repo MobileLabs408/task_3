@@ -117,10 +117,6 @@ function [path, obstacle_position, current_position, push, pop] = modified_A_sta
             elseif any(arrayfun(@(x) isequal(x.position, neighbor_node.position), open_list)) && open_list(find(arrayfun(@(x) isequal(x.position, neighbor_node.position), open_list), 1)).f > neighbor_node.f
                 open_list(find(arrayfun(@(x) isequal(x.position, neighbor_node.position), open_list), 1)) = neighbor_node;
             end
-                
-            % Add neighbor to closed list
-            %closed_list = [closed_list; neighbor_pos];
-
         end
 
         % Remove current node from open list

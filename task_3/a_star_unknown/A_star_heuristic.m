@@ -10,13 +10,13 @@
 function heuristic = A_star_heuristic(current_position, goal_position)
 
     % Euclidean distance
-    %heuristic = norm(current_position-goal_position);
+    heuristic = norm(current_position-goal_position);
     
     % Having heuristic = 0 makes A* = Dijkstra
     %heuristic = 0;
 
     % Diagonal distance
-    %
+    %{
     D = 1;
     %D2 = 1; % Chebyshev
     D2 = sqrt(2); % Octile
