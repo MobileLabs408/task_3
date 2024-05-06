@@ -119,7 +119,7 @@ function [path, obstacle_position, current_position, push, pop] = modified_A_sta
             end
                 
             % Add neighbor to closed list
-            closed_list = [closed_list; neighbor_pos];
+            %closed_list = [closed_list; neighbor_pos];
 
         end
 
