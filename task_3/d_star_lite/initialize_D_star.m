@@ -7,7 +7,7 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [g, rhs, U, k_m] = initialize_D_star(map, start_position, goal_position)
+function [U, g, rhs, k_m] = initialize_D_star(map, start_position, goal_position)
   
     % Get dimensions of map
     [map_rows, map_columns] = size(map);

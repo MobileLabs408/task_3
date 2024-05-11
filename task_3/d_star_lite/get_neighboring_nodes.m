@@ -1,7 +1,7 @@
 %==========================================================================
 % Author: Carl Larsson
-% Description: Get neighboring positions (possible successors) of a
-% position
+% Description: Get neighboring positions (possible successors and 
+% predecessors) of a position
 % Date: 2024-04-25
 
 % This software is licensed under the MIT License
@@ -10,7 +10,7 @@
 
 function neighbors = get_neighboring_nodes(position)
 
-    % Horizontal, vertical and diagonal
+    % Horizontal, vertical and diagonal (all allowed moves)
     moves = [0, 1; 0, -1; 1, 0; -1, 0; 1, 1; 1, -1; -1, 1; -1, -1];
     % Performs element wise addition of current_node with each row in
     % moves
