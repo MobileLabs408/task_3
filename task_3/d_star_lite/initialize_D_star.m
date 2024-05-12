@@ -15,7 +15,7 @@ function [U, g, rhs, k_m] = initialize_D_star(map, start_position, goal_position
     % Open list, Priority queue
     U = [];
 
-    % Minimum key encountered?
+    % Estimate heuristic distance for start to goal
     % 0 because rhs = 0 for goal
     k_m = 0;
 
