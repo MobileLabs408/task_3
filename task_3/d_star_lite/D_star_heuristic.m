@@ -1,6 +1,7 @@
 %==========================================================================
 % Author: Carl Larsson
-% Description: D* lite heuristic
+% Description: D* lite heuristic, is also used for cost, thus in this
+% implementation, h = c
 % Date: 2024-04-30
 
 % This software is licensed under the MIT License
