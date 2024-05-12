@@ -7,32 +7,29 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [path, push, pop] = D_star_lite(map, start_position, goal_position)
+function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_position)
     %% Init
-    % Used for keeping track of the number of pushes and pops 
-    push = 0;
-    pop = 0;
-
     % Get map dimensions
     [map_rows, map_columns] = size(map);
 
     % Created map (robots internal map)
-    % Known
+    % Known environment (static)
     created_map = map;
-    % Unknown
-    %created_map = zeros(map_rows,map_columns);
+    % Unknown environment (dynamic)
+    %created_map = zeros(map_rows, map_columns);
 
-    % 
+    % Used for estimated heuristic distance
     last_change_position = start_position;
     current_position = start_position;
+    % Fix path taken
     path = [];
     path = [path;current_position];
 
     % Initialize D* lite
-    [U, g, rhs, k_m] = initialize_D_star(created_map, start_position, goal_position);
+    [U, g, rhs, k_m, push, pop] = initialize_D_star(created_map, start_position, goal_position);
 
     % Update and compute shortest path
-    [U, push, pop] = shortest_path(U, start_position, g, rhs, k_m, push, pop);
+    [U, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop);
 
     %% Main loop, continue until goal is reached
     % Note that this concerns movement, not search, movement is from start
@@ -44,10 +41,11 @@ function [path, push, pop] = D_star_lite(map, start_position, goal_position)
             return
         end
 
-        succs = get_neighboring_nodes(current_position);
         % Move to neighbor with lowest cost
-        [min_idx, min_val] = min_cost_neighbor(succs, current_position);
+        succs = get_neighboring_nodes(current_position);
+        [min_idx, min_val] = min_cost_neighbor(succs, current_position, created_map);
         current_position = succs(min_idx,:);
+        % Add current position to path
         path = [path;current_position];
 
         % Scan graph for changes
@@ -55,16 +53,24 @@ function [path, push, pop] = D_star_lite(map, start_position, goal_position)
         % Check all neighbors if they are undiscovered walls, if they are
         % then update created map with new info
         for i = 1:size(neighbors, 1)
-            if(created_map(neighbors(i,:)) ~= map(neighbors(i,:)))
-                created_map(neighbors(i,:)) = inf;
-                changes = true;
+            % Skip if neighbor is outside map boundaries
+            if any(neighbors(s_prim,:) < 1) || (neighbors(s_prim,1) > map_rows) || (neighbors(s_prim,2) > map_columns)
+                continue;
+            end
+
+            % They can only differ in the case of obstacles (inf value)
+            if(created_map(neighbors(i,1), neighbors(i,2)) ~= map(neighbors(i,1), neighbors(i,2)))
+                % Add new info to created map
+                created_map(neighbors(i,1), neighbors(i,2)) = inf;
+                % Save nodes which have changed so they can be updated
                 changed_nodes = [changed_nodes; neighbors(i,:)];
+                % Mark that a change has occured
+                changes = true;
             end
         end
 
-        % If graph had new changes
+        % If map had changes (new info has been obtained)
         if(changes == true)
-            changes = false;
             % Update heuristic estimate distance from start to goal
             k_m = k_m + D_star_heuristic(last_change_position, current_position);
             last_change_position = current_position;
@@ -79,11 +85,14 @@ function [path, push, pop] = D_star_lite(map, start_position, goal_position)
                     [U, push] = update_vertex(U, start_position, changed_node_and_neighbors(s_prim,:), g, rhs, k_m, push);
                 end
             end
-            % Empty list after all changed nodes have been updated
-            changed_nodes = [];
 
             % Update and compute shortest path
-            [U, push, pop] = shortest_path(U, start_position, g, rhs, k_m, push, pop);
+            [U, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop);
+
+            % Empty list after all changed nodes have been updated
+            changed_nodes = [];
+            % Reset changes flag
+            changes = false;
         end
     end
 

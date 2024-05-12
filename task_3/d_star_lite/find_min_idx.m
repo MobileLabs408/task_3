@@ -15,12 +15,8 @@ function [min_idx, min_k1, min_k2] = find_min_idx(U)
     min_k2 = Inf;
     min_idx = -1;
 
-    % Key comparison according to:
-    % k <= k' if
-    % k1 < k'1
-    % OR
-    % k1 = k'1 AND k2 <= k'2
-    for idx = 1:length(U)
+    % Check entire U for smallest value key (lowest priority)
+    for idx = 1:size(U, 1)
         node = U(idx);
         if key_less_or_eq([node.k1, node.k2], [min_k1, min_k2])
             min_k1 = node.k1;

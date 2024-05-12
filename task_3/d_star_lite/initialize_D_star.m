@@ -7,10 +7,14 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [U, g, rhs, k_m] = initialize_D_star(map, start_position, goal_position)
+function [U, g, rhs, k_m, push, pop] = initialize_D_star(created_map, start_position, goal_position)
     
+    % Used for keeping track of the number of pushes and pops 
+    push = 0;
+    pop = 0;
+
     % Get dimensions of map
-    [map_rows, map_columns] = size(map);
+    [map_rows, map_columns] = size(created_map);
 
     % Open list, Priority queue
     U = [];

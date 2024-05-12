@@ -11,6 +11,6 @@
 function heuristic = D_star_heuristic(source_position, target_position)
 
     % Euclidean distance
-    heuristic = norm(source_position-target_position);
+    heuristic = norm(source_position - target_position);
     
 end

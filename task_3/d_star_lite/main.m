@@ -26,14 +26,14 @@ maze = load("../mazes/Maze.mat");
 %--------------------------------------------------------------------------
 
 tic;
-[path, push, pop] = D_star_lite(maze.Maze.map, maze.Maze.start, maze.Maze.goal);
+[path, push, pop, created_map] = D_star_lite(maze.Maze.map, maze.Maze.start, maze.Maze.goal);
 execution_time = toc;
 
 %--------------------------------------------------------------------------
 %% Plot resulting path
 %--------------------------------------------------------------------------
 
-plot_map_and_path(maze.Maze.map, maze.Maze.start, maze.Maze.goal, path);
+plot_map_and_path(created_map, maze.Maze.start, maze.Maze.goal, path);
 
 %--------------------------------------------------------------------------
 %% Print execution time, pushes and pops
