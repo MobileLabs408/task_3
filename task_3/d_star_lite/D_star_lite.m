@@ -72,7 +72,6 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
                 % y corresponds to row, x corresponds to column
                 created_map(neighbors(i,2), neighbors(i,1)) = inf;
                 rhs(neighbors(i,2), neighbors(i,1)) = inf;
-                g(neighbors(i,2), neighbors(i,1)) = inf;
                 % Save nodes which have changed so they can be updated
                 changed_nodes = [changed_nodes; neighbors(i,:)];
                 % Mark that a change has occured
