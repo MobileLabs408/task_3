@@ -34,7 +34,7 @@ function [path, created_map, push, pop] = A_star_unknown(map, start_position, go
         % Unless we returned because we found goal, then we returned because 
         % we found a new obstacle and we need to update the map regarding it
         if ~isnan(obstacle_position)
-            created_map(obstacle_position(1), obstacle_position(2)) = inf;
+            created_map(obstacle_position(2), obstacle_position(1)) = inf;
         end
         % Path is empty if A* can't find a path to goal
         if isempty(temp_path)

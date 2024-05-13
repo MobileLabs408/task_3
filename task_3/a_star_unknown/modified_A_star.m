@@ -70,12 +70,12 @@ function [path, obstacle_position, current_position, push, pop] = modified_A_sta
             end
 
             % If we encounter edge of maze or obstacles
-            if any(neighbor_pos < 1) || (neighbor_pos(1) > map_rows) || (neighbor_pos(2) > map_columns) || (map(neighbor_pos(1), neighbor_pos(2)) == inf)
+            if any(neighbor_pos < 1) || (neighbor_pos(2) > map_rows) || (neighbor_pos(1) > map_columns) || (map(neighbor_pos(2), neighbor_pos(1)) == inf)
                 % We are aware of the obstacle according to our created map, 
                 % so we continue as usual by skipping it.
                 % We also assume we have knowledge of the size of the map
                 % and its edges, if we encounter edge we also just skip
-                if any(neighbor_pos < 1) || (neighbor_pos(1) > map_rows) || (neighbor_pos(2) > map_columns) || (created_map(neighbor_pos(1), neighbor_pos(2)) == inf)
+                if any(neighbor_pos < 1) || (neighbor_pos(2) > map_rows) || (neighbor_pos(1) > map_columns) || (created_map(neighbor_pos(2), neighbor_pos(1)) == inf)
                     continue;
                 % If neighbor is an obstacle which we are unaware of 
                 % (haven't seen before) and is not on our created map
@@ -93,7 +93,7 @@ function [path, obstacle_position, current_position, push, pop] = modified_A_sta
             
             % Determine movement cost
             % If neighbor is change in both x and y, then we have moved diagonally
-            if abs(neighbor_pos(1) - current_node.position(1)) == 1 && abs(neighbor_pos(2) - current_node.position(2)) == 1
+            if abs(neighbor_pos(2) - current_node.position(2)) == 1 && abs(neighbor_pos(1) - current_node.position(1)) == 1
                 % g is cost-so-far
                 neighbor_g = current_node.g + diagonal_cost;
             else
