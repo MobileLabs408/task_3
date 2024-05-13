@@ -7,14 +7,14 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [U, push, pop] = update_vertex(U, start_position, position, g, rhs, k_m)
+function [U, push, pop] = update_vertex(U, current_position, position, g, rhs, k_m)
     
     % Used for keeping track of the number of pushes and pops (local)
     push = 0;
     pop = 0;
     
     % Create node
-    k = calculate_key(start_position, position, g, rhs, k_m);
+    k = calculate_key(current_position, position, g, rhs, k_m);
     node = struct('position', position,'k1', k(1), 'k2', k(2));
 
     % Wrong g value and node is in U, update value in U

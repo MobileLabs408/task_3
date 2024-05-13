@@ -1,6 +1,7 @@
 %==========================================================================
 % Author: Carl Larsson
-% Description: Find smallest key in queue, return value and index
+% Description: Find smallest (lowest priority) key in queue, 
+% return index and value
 % Date: 2024-05-02
 
 % This software is licensed under the MIT License

@@ -15,6 +15,7 @@ function [min_idx, min_val] = min_cost_neighbor(neighbors, position, created_map
 
     min_idx = -1;
     min_val = inf;
+    
     % Check all neighbors, find the one which minimizes cost
     for s_prim = 1:size(neighbors, 1)
         % Skip if neighbor is outside map boundaries or an obstacle

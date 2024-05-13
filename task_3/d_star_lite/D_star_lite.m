@@ -12,28 +12,21 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
     % Get map dimensions
     [map_rows, map_columns] = size(map);
 
-    % Created map (robots internal map)
-    % Known environment (static)
-    if(~dynamic_environment)
-        created_map = map;
-    % Unknown environment (dynamic)
-    else
-        created_map = zeros(map_rows, map_columns);
-    end
-
     % Used for keeping track of changes in map and what needs to be updated
     changed_nodes = [];
     changes = false;
 
     % Used for estimated heuristic distance
     last_change_position = start_position;
+    % Movement goes from start position to goal position, but search is 
+    % performed from goal position to start_position
     current_position = start_position;
-    % Path taken by robot
+    % Track path taken by robot
     path = [];
-    path = [path;current_position];
+    path = [path; current_position];
 
     % Initialize D* lite
-    [U, g, rhs, k_m, push, pop] = initialize_D_star(created_map, start_position, goal_position);
+    [U, created_map, g, rhs, k_m, push, pop] = initialize_D_star(map, start_position, goal_position, dynamic_environment);
 
     % Update and compute shortest path
     [U, g, rhs, temp_push, temp_pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map);
@@ -42,7 +35,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
 
     %% Main loop, continue until goal is reached
     % Note that this concerns movement, not search, movement is from start
-    % to goal, search is from goal to start, see shortest_path
+    % to goal, search is from goal to start in D* lite, see shortest_path
     while(current_position(2) ~= goal_position(2) || current_position(1) ~= goal_position(1))
         % There is no known path to goal
         if(rhs(current_position(2), current_position(1)) == inf)
@@ -53,12 +46,12 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
 
         % Move to neighbor with lowest cost
         succs = get_neighboring_nodes(current_position);
-        [min_idx, min_val] = min_cost_neighbor(succs, current_position, created_map, g);
+        [min_idx, ~] = min_cost_neighbor(succs, current_position, created_map, g);
         current_position = succs(min_idx,:);
         % Add current position to path
         path = [path; current_position];
 
-        % Scan graph for changes
+        %% Scan graph for changes
         neighbors = get_neighboring_nodes(current_position);
         % Check all neighbors if they are undiscovered walls, if they are
         % then update created map with new info
@@ -68,20 +61,22 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
                 continue;
             end
 
-            % They can only differ in the case of obstacles (inf value)
+            % Maps can only differ in the case of obstacles (inf value)
             if(created_map(neighbors(i,2), neighbors(i,1)) ~= map(neighbors(i,2), neighbors(i,1)))
                 % Add new info to created map
-                % y corresponds to row, x corresponds to column
                 created_map(neighbors(i,2), neighbors(i,1)) = inf;
+                % This node is untraversable by D* lite algorithm, infinite
+                % cost
                 rhs(neighbors(i,2), neighbors(i,1)) = inf;
-                % Save nodes which have changed so they can be updated
+                % Save nodes which have changed so surrounding (affected)
+                % nodes can be updated
                 changed_nodes = [changed_nodes; neighbors(i,:)];
-                % Mark that a change has occured
+                % Mark that a change has occured (flag)
                 changes = true;
             end
         end
 
-        % If map had changes (new info has been obtained)
+        %% If map had changes (new info has been obtained)
         if(changes == true)
             % Current node should also be seen as changed????
             changed_nodes = [changed_nodes; current_position];
@@ -94,7 +89,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
             for s = 1:size(changed_nodes, 1)
                 % Changed node and neighbors
                 changed_node_and_neighbors = get_neighboring_nodes(changed_nodes(s,:));
-                changed_node_and_neighbors = [changed_node_and_neighbors; changed_nodes(s,:)];
+                changed_node_and_neighbors = [changed_nodes(s,:); changed_node_and_neighbors];
                 for s_prim = 1:size(changed_node_and_neighbors, 1)
                     % Update node
                     [U, temp_push, temp_pop] = update_vertex(U, current_position, changed_node_and_neighbors(s_prim,:), g, rhs, k_m);

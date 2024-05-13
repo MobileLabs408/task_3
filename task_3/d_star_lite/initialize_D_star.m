@@ -7,14 +7,23 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [U, g, rhs, k_m, push, pop] = initialize_D_star(created_map, start_position, goal_position)
+function [U, created_map, g, rhs, k_m, push, pop] = initialize_D_star(map, start_position, goal_position, dynamic_environment)
     
     % Used for keeping track of the number of pushes and pops 
     push = 0;
     pop = 0;
 
     % Get dimensions of map
-    [map_rows, map_columns] = size(created_map);
+    [map_rows, map_columns] = size(map);
+
+    % Created map (robots internal map)
+    % Known environment (static)
+    if(~dynamic_environment)
+        created_map = map;
+    % Unknown environment (dynamic)
+    else
+        created_map = zeros(map_rows, map_columns);
+    end
 
     % Open list, Priority queue
     U = [];
