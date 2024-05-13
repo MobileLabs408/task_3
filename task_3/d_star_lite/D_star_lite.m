@@ -18,9 +18,12 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
     % Unknown environment (dynamic)
     %created_map = zeros(map_rows, map_columns);
 
+    % Used for keeping track of changes in map
+    changed_nodes = [];
+    changes = false;
+
     % Used for estimated heuristic distance
     last_change_position = start_position;
-    changes = false;
     current_position = start_position;
     % Fix path taken
     path = [];
@@ -73,6 +76,9 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
 
         % If map had changes (new info has been obtained)
         if(changes == true)
+            % Current node should also be seen as changed????
+            changed_nodes = [changed_nodes; current_position];
+
             % Update heuristic estimate distance from start to goal
             k_m = k_m + D_star_heuristic(last_change_position, current_position);
             last_change_position = current_position;
