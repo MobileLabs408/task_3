@@ -8,7 +8,7 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [min_idx, min_val] = min_cost_neighbor(neighbors, position, created_map)
+function [min_idx, min_val] = min_cost_neighbor(neighbors, position, created_map, g)
 
     % Get map dimensions
     [map_rows, map_columns] = size(created_map);
@@ -23,7 +23,7 @@ function [min_idx, min_val] = min_cost_neighbor(neighbors, position, created_map
         end
 
         % Cost (note that this implementation has c = h)
-        val = D_star_heuristic(position, neighbors(s_prim, :)) + g(neighbors(s_prim,1), neighbors(s,2));
+        val = D_star_heuristic(position, neighbors(s_prim, :)) + g(neighbors(s_prim,1), neighbors(s_prim,2));
         % If we find one with even lower cost
         if(val < min_val)
             % Update value and index

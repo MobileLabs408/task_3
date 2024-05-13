@@ -20,6 +20,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
 
     % Used for estimated heuristic distance
     last_change_position = start_position;
+    changes = false;
     current_position = start_position;
     % Fix path taken
     path = [];
@@ -29,7 +30,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
     [U, g, rhs, k_m, push, pop] = initialize_D_star(created_map, start_position, goal_position);
 
     % Update and compute shortest path
-    [U, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop);
+    [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop);
 
     %% Main loop, continue until goal is reached
     % Note that this concerns movement, not search, movement is from start
@@ -44,7 +45,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
 
         % Move to neighbor with lowest cost
         succs = get_neighboring_nodes(current_position);
-        [min_idx, min_val] = min_cost_neighbor(succs, current_position, created_map);
+        [min_idx, min_val] = min_cost_neighbor(succs, current_position, created_map, g);
         current_position = succs(min_idx,:);
         % Add current position to path
         path = [path; current_position];
@@ -55,7 +56,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
         % then update created map with new info
         for i = 1:size(neighbors, 1)
             % Skip if neighbor is outside map boundaries
-            if any(neighbors(s_prim,:) < 1) || (neighbors(s_prim,1) > map_rows) || (neighbors(s_prim,2) > map_columns)
+            if any(neighbors(i,:) < 1) || (neighbors(i,1) > map_rows) || (neighbors(i,2) > map_columns)
                 continue;
             end
 
@@ -88,7 +89,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
             end
 
             % Update and compute shortest path
-            [U, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop);
+            [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop);
 
             % Empty list after all changed nodes have been updated
             changed_nodes = [];

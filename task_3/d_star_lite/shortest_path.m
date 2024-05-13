@@ -7,7 +7,7 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [U, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop)
+function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop)
     %% Init
     % Get map dimensions
     [map_rows, map_columns] = size(created_map);
@@ -87,7 +87,7 @@ function [U, push, pop] = shortest_path(U, start_position, goal_position, g, rhs
                         succs = get_neighboring_nodes(preds_u(s,:));
                         
                         % Find the one which minimizes cost
-                        [min_idx, min_val] = min_cost_neighbor(succs, preds_u(s,:));
+                        [min_idx, min_val] = min_cost_neighbor(succs, preds_u(s,:), created_map, g);
 
                         % Update rhs value with min cost
                         rhs(preds_u(s,1), preds_u(s,2)) = min_val;                        
