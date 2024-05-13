@@ -7,7 +7,11 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [U, push] = update_vertex(U, start_position, position, g, rhs, k_m, push)
+function [U, push, pop] = update_vertex(U, start_position, position, g, rhs, k_m)
+    
+    % Used for keeping track of the number of pushes and pops (local)
+    push = 0;
+    pop = 0;
     
     % Create node
     k = calculate_key(start_position, position, g, rhs, k_m);
@@ -28,7 +32,7 @@ function [U, push] = update_vertex(U, start_position, position, g, rhs, k_m, pus
     elseif(g(node.position(2), node.position(1)) == rhs(node.position(2), node.position(1)) && (any(arrayfun(@(x) isequal(x.position, node.position), U))))
         % remove node
         U(find(arrayfun(@(x) isequal(x.position, node.position), U), 1)) = [];
-        % Does it count as pop?? I do not think it should
+        pop = pop + 1;
     end
 
 end

@@ -7,8 +7,12 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop)
+function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map)
     %% Init
+    % Used for keeping track of the number of pushes and pops (local)
+    push = 0;
+    pop = 0;
+
     % Get map dimensions
     [map_rows, map_columns] = size(created_map);
 
@@ -20,9 +24,8 @@ function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position
     
     %% Continue until start node is locally consistent
     while(key_less(top_key, start_key) || (rhs(start_position(2), start_position(1)) > g(start_position(2), start_position(1))))
-        % Pop top node (lowest value key)
+        % Get top node (lowest value key)
         node = U(min_idx);
-        pop = pop + 1;
 
         % Old key
         k_old = top_key;
@@ -41,6 +44,7 @@ function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position
             g(node.position(2), node.position(1)) = rhs(node.position(2), node.position(1));
             % Remove node from U
             U(min_idx) = [];
+            pop = pop + 1;
 
             % Update all predecessors (neighbors)
             preds = get_neighboring_nodes(node.position);
@@ -58,7 +62,9 @@ function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position
                 end
 
                 % Update vertex
-                [U, push] = update_vertex(U, start_position, preds(s,:), g, rhs, k_m, push);
+                [U, temp_push, temp_pop] = update_vertex(U, start_position, preds(s,:), g, rhs, k_m);
+                push = push + temp_push;
+                pop = pop + temp_pop;
             end
 
         %% Update and check to ensure optimality
@@ -94,7 +100,9 @@ function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position
                     end
 
                     % Update vertex
-                    [U, push] = update_vertex(U, start_position, preds_u(s,:), g, rhs, k_m, push);
+                    [U, temp_push, temp_pop] = update_vertex(U, start_position, preds_u(s,:), g, rhs, k_m);
+                    push = push + temp_push;
+                    pop = pop + temp_pop;
                 end
             end
         end

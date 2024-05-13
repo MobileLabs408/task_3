@@ -20,10 +20,10 @@ function [U, g, rhs, k_m, push, pop] = initialize_D_star(created_map, start_posi
     U = [];
 
     % Estimate heuristic distance for start to goal
-    % 0 because rhs = 0 for goal
+    % Start at 0
     k_m = 0;
 
-    % Initialize g and rhs values
+    % Initialize g and rhs values/map
     % g is cost of reaching this state from begining node
     g = Inf(map_rows, map_columns);
     % The rhs-values are one-step lookahead values
@@ -34,6 +34,8 @@ function [U, g, rhs, k_m, push, pop] = initialize_D_star(created_map, start_posi
     % Insert goal node into priority queue
     k = calculate_key(start_position, goal_position, g, rhs, k_m);
     goal_node = struct('position', goal_position,'k1', k(1), 'k2', k(2));
+    % Push goal
     U = [U; goal_node];
+    push = push + 1;
 
 end

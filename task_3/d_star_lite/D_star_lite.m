@@ -7,28 +7,28 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_position, dynamic)
+function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_position, dynamic_environment)
     %% Init
     % Get map dimensions
     [map_rows, map_columns] = size(map);
 
     % Created map (robots internal map)
     % Known environment (static)
-    if(~dynamic)
+    if(~dynamic_environment)
         created_map = map;
     % Unknown environment (dynamic)
     else
         created_map = zeros(map_rows, map_columns);
     end
 
-    % Used for keeping track of changes in map
+    % Used for keeping track of changes in map and what needs to be updated
     changed_nodes = [];
     changes = false;
 
     % Used for estimated heuristic distance
     last_change_position = start_position;
     current_position = start_position;
-    % Fix path taken
+    % Path taken by robot
     path = [];
     path = [path;current_position];
 
@@ -36,7 +36,9 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
     [U, g, rhs, k_m, push, pop] = initialize_D_star(created_map, start_position, goal_position);
 
     % Update and compute shortest path
-    [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop);
+    [U, g, rhs, temp_push, temp_pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map);
+    push = push + temp_push;
+    pop = pop + temp_pop;
 
     %% Main loop, continue until goal is reached
     % Note that this concerns movement, not search, movement is from start
@@ -44,7 +46,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
     while(current_position(2) ~= goal_position(2) || current_position(1) ~= goal_position(1))
         % There is no known path to goal
         if(rhs(current_position(2), current_position(1)) == inf)
-            %path = [];
+            path = [];
             disp("No path found")
             return
         end
@@ -95,12 +97,16 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
                 changed_node_and_neighbors = [changed_node_and_neighbors; changed_nodes(s,:)];
                 for s_prim = 1:size(changed_node_and_neighbors, 1)
                     % Update node
-                    [U, push] = update_vertex(U, current_position, changed_node_and_neighbors(s_prim,:), g, rhs, k_m, push);
+                    [U, temp_push, temp_pop] = update_vertex(U, current_position, changed_node_and_neighbors(s_prim,:), g, rhs, k_m);
+                    push = push + temp_push;
+                    pop = pop + temp_pop;
                 end
             end
 
             % Update and compute shortest path
-            [U, g, rhs, push, pop] = shortest_path(U, current_position, goal_position, g, rhs, k_m, created_map, push, pop);
+            [U, g, rhs, temp_push, temp_pop] = shortest_path(U, current_position, goal_position, g, rhs, k_m, created_map);
+            push = push + temp_push;
+            pop = pop + temp_pop;
 
             % Empty list after all changed nodes have been updated
             changed_nodes = [];
