@@ -28,12 +28,12 @@ function plot_map_and_path(map, start, goal, path)
     end
 
     % Plot the initial and goal position
-    plot(start(1), start(2), 's', 'MarkerFaceColor', 'b', 'MarkerSize', 10, 'color', 'b');
-    plot(goal(1), goal(2), 's', 'MarkerFaceColor', 'y', 'MarkerSize', 10, 'color', 'y');
+    plot(start(2), start(1), 's', 'MarkerFaceColor', 'b', 'MarkerSize', 10, 'color', 'b');
+    plot(goal(2), goal(1), 's', 'MarkerFaceColor', 'y', 'MarkerSize', 10, 'color', 'y');
     
     % Plot the path
     if ~isempty(path)
-        plot(path(:, 1), path(:, 2), 'r', 'LineWidth', 2);
+        plot(path(:, 2), path(:, 1), 'r', 'LineWidth', 2);
     end
 
     % Fix title and axis

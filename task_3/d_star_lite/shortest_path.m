@@ -19,7 +19,7 @@ function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position
     start_key = calculate_key(start_position, start_position, g, rhs, k_m);
     
     %% Continue until start node is locally consistent
-    while(key_less(top_key, start_key) || (rhs(start_position(1), start_position(2)) > g(start_position(1), start_position(2))))
+    while(key_less(top_key, start_key) || (rhs(start_position(2), start_position(1)) > g(start_position(2), start_position(1))))
         % Pop top node (lowest value key)
         node = U(min_idx);
         pop = pop + 1;
@@ -36,9 +36,9 @@ function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position
             U(min_idx) = updated_node;
         
         %% Update if a shorter path might have been found
-        elseif(g(node.position(1), node.position(2)) > rhs(node.position(1), node.position(2)))
+        elseif(g(node.position(2), node.position(1)) > rhs(node.position(2), node.position(1)))
             % Fix g value
-            g(node.position(1), node.position(2)) = rhs(node.position(1), node.position(2));
+            g(node.position(2), node.position(1)) = rhs(node.position(2), node.position(1));
             % Remove node from U
             U(min_idx) = [];
 
@@ -46,15 +46,15 @@ function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position
             preds = get_neighboring_nodes(node.position);
             for s = 1:size(preds, 1)
                 % Skip if neighbor is outside map boundaries or an obstacle
-                if any(preds(s,:) < 1) || (preds(s,1) > map_rows) || (preds(s,2) > map_columns) || (created_map(preds(s,1), preds(s,2)) == inf)
+                if any(preds(s,:) < 1) || (preds(s,2) > map_rows) || (preds(s,1) > map_columns) || (created_map(preds(s,2), preds(s,1)) == inf)
                     continue;
                 end
 
                 % Do not update goal node
-                if(preds(s,1) ~= goal_position(1) || preds(s,2) ~= goal_position(2))
+                if(preds(s,2) ~= goal_position(2) || preds(s,1) ~= goal_position(1))
                     % Update rhs if better path has been found
                     % note that in this implementation c = h
-                    rhs(preds(s,1), preds(s,2)) = min(rhs(preds(s,1), preds(s,2)), D_star_heuristic(preds(s,:), node.position) + g(node.position(1), node.position(2)));
+                    rhs(preds(s,2), preds(s,1)) = min(rhs(preds(s,2), preds(s,1)), D_star_heuristic(preds(s,:), node.position) + g(node.position(2), node.position(1)));
                 end
 
                 % Update vertex
@@ -66,23 +66,23 @@ function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position
             % Set cost to reach this node to inf to treat it as if we do
             % not know the cost of reaching this node and thus it requires
             % to be updated
-            g_old = g(node.position(1), node.position(2));
-            g(node.position(1), node.position(2)) = inf;
+            g_old = g(node.position(2), node.position(1));
+            g(node.position(2), node.position(1)) = inf;
 
             % Update all predecessors aswell as current (u)
             preds_u = get_neighboring_nodes(node.position);
             preds_u = [preds_u; node.position];
             for s = 1:size(preds_u, 1)
                 % Skip if neighbor is outside map boundaries or an obstacle
-                if any(preds_u(s,:) < 1) || (preds_u(s,1) > map_rows) || (preds_u(s,2) > map_columns) || (created_map(preds_u(s,1), preds_u(s,2)) == inf)
+                if any(preds_u(s,:) < 1) || (preds_u(s,2) > map_rows) || (preds_u(s,1) > map_columns) || (created_map(preds_u(s,2), preds_u(s,1)) == inf)
                     continue;
                 end
 
                 % If rhs is not consistent?
                 % Note that in this implementation, c = h
-                if(rhs(preds_u(s,1), preds_u(s,2)) == D_star_heuristic(preds_u(s,:), node.position) + g_old)
+                if(rhs(preds_u(s,2), preds_u(s,1)) == D_star_heuristic(preds_u(s,:), node.position) + g_old)
                     % Unless goal node
-                    if(preds_u(s,1) ~= goal_position(1) || preds_u(s,2) ~= goal_position(2))
+                    if(preds_u(s,2) ~= goal_position(2) || preds_u(s,1) ~= goal_position(1))
                         % Find successors to s
                         succs = get_neighboring_nodes(preds_u(s,:));
                         
@@ -90,7 +90,7 @@ function [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position
                         [min_idx, min_val] = min_cost_neighbor(succs, preds_u(s,:), created_map, g);
 
                         % Update rhs value with min cost
-                        rhs(preds_u(s,1), preds_u(s,2)) = min_val;                        
+                        rhs(preds_u(s,2), preds_u(s,1)) = min_val;                        
                     end
 
                     % Update vertex

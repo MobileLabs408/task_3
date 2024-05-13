@@ -26,7 +26,8 @@ maze = load("../mazes/Maze.mat");
 %--------------------------------------------------------------------------
 
 tic;
-[path, push, pop, created_map] = D_star_lite(maze.Maze.map, maze.Maze.start, maze.Maze.goal);
+dynamic_environment = false;
+[path, push, pop, created_map] = D_star_lite(maze.Maze.map, maze.Maze.start, maze.Maze.goal, dynamic_environment);
 execution_time = toc;
 
 %--------------------------------------------------------------------------

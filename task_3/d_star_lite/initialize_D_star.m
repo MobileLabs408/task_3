@@ -29,7 +29,7 @@ function [U, g, rhs, k_m, push, pop] = initialize_D_star(created_map, start_posi
     % The rhs-values are one-step lookahead values
     rhs = Inf(map_rows, map_columns);
     % rhs for goal is then naturally 0
-    rhs(goal_position(1), goal_position(2)) = 0;
+    rhs(goal_position(2), goal_position(1)) = 0;
 
     % Insert goal node into priority queue
     k = calculate_key(start_position, goal_position, g, rhs, k_m);

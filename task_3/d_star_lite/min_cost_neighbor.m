@@ -18,12 +18,12 @@ function [min_idx, min_val] = min_cost_neighbor(neighbors, position, created_map
     % Check all neighbors, find the one which minimizes cost
     for s_prim = 1:size(neighbors, 1)
         % Skip if neighbor is outside map boundaries or an obstacle
-        if any(neighbors(s_prim,:) < 1) || (neighbors(s_prim,1) > map_rows) || (neighbors(s_prim,2) > map_columns) || (created_map(neighbors(s_prim,1), neighbors(s_prim,2)) == inf)
+        if any(neighbors(s_prim,:) < 1) || (neighbors(s_prim,2) > map_rows) || (neighbors(s_prim,1) > map_columns) || (created_map(neighbors(s_prim,2), neighbors(s_prim,1)) == inf)
             continue;
         end
 
         % Cost (note that this implementation has c = h)
-        val = D_star_heuristic(position, neighbors(s_prim, :)) + g(neighbors(s_prim,1), neighbors(s_prim,2));
+        val = D_star_heuristic(position, neighbors(s_prim, :)) + g(neighbors(s_prim,2), neighbors(s_prim,1));
         % If we find one with even lower cost
         if(val < min_val)
             % Update value and index

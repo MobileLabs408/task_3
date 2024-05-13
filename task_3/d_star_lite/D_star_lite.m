@@ -7,16 +7,19 @@
 % Refer to the LICENSE file for details
 %==========================================================================
 
-function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_position)
+function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_position, dynamic)
     %% Init
     % Get map dimensions
     [map_rows, map_columns] = size(map);
 
     % Created map (robots internal map)
     % Known environment (static)
-    created_map = map;
+    if(~dynamic)
+        created_map = map;
     % Unknown environment (dynamic)
-    %created_map = zeros(map_rows, map_columns);
+    else
+        created_map = zeros(map_rows, map_columns);
+    end
 
     % Used for keeping track of changes in map
     changed_nodes = [];
@@ -38,9 +41,9 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
     %% Main loop, continue until goal is reached
     % Note that this concerns movement, not search, movement is from start
     % to goal, search is from goal to start, see shortest_path
-    while(current_position(1) ~= goal_position(1) || current_position(2) ~= goal_position(2))
+    while(current_position(2) ~= goal_position(2) || current_position(1) ~= goal_position(1))
         % There is no known path to goal
-        if(rhs(current_position(1), current_position(2)) == inf)
+        if(rhs(current_position(2), current_position(1)) == inf)
             %path = [];
             disp("No path found")
             return
@@ -59,14 +62,17 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
         % then update created map with new info
         for i = 1:size(neighbors, 1)
             % Skip if neighbor is outside map boundaries
-            if any(neighbors(i,:) < 1) || (neighbors(i,1) > map_rows) || (neighbors(i,2) > map_columns)
+            if any(neighbors(i,:) < 1) || (neighbors(i,2) > map_rows) || (neighbors(i,1) > map_columns)
                 continue;
             end
 
             % They can only differ in the case of obstacles (inf value)
-            if(created_map(neighbors(i,1), neighbors(i,2)) ~= map(neighbors(i,1), neighbors(i,2)))
+            if(created_map(neighbors(i,2), neighbors(i,1)) ~= map(neighbors(i,2), neighbors(i,1)))
                 % Add new info to created map
-                created_map(neighbors(i,1), neighbors(i,2)) = inf;
+                % y corresponds to row, x corresponds to column
+                created_map(neighbors(i,2), neighbors(i,1)) = inf;
+                rhs(neighbors(i,2), neighbors(i,1)) = inf;
+                g(neighbors(i,2), neighbors(i,1)) = inf;
                 % Save nodes which have changed so they can be updated
                 changed_nodes = [changed_nodes; neighbors(i,:)];
                 % Mark that a change has occured
@@ -77,7 +83,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
         % If map had changes (new info has been obtained)
         if(changes == true)
             % Current node should also be seen as changed????
-            changed_nodes = [changed_nodes; current_position];
+            %changed_nodes = [changed_nodes; current_position];
 
             % Update heuristic estimate distance from start to goal
             k_m = k_m + D_star_heuristic(last_change_position, current_position);
