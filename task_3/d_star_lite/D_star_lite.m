@@ -95,12 +95,12 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
                 changed_node_and_neighbors = [changed_node_and_neighbors; changed_nodes(s,:)];
                 for s_prim = 1:size(changed_node_and_neighbors, 1)
                     % Update node
-                    [U, push] = update_vertex(U, start_position, changed_node_and_neighbors(s_prim,:), g, rhs, k_m, push);
+                    [U, push] = update_vertex(U, current_position, changed_node_and_neighbors(s_prim,:), g, rhs, k_m, push);
                 end
             end
 
             % Update and compute shortest path
-            [U, g, rhs, push, pop] = shortest_path(U, start_position, goal_position, g, rhs, k_m, created_map, push, pop);
+            [U, g, rhs, push, pop] = shortest_path(U, current_position, goal_position, g, rhs, k_m, created_map, push, pop);
 
             % Empty list after all changed nodes have been updated
             changed_nodes = [];
