@@ -13,8 +13,8 @@ function first_is_less = key_less(first_key, second_key)
     % Key comparison according to:
     % k < k' if
     % k1 < k'1
-    % or
-    % k1 = k'1 && k2 < k'2
+    % OR
+    % k1 = k'1 AND k2 < k'2
     if (first_key(1) < second_key(1)) || ((first_key(1) == second_key(1)) && (first_key(2) < second_key(2)))
         first_is_less = true;
     else

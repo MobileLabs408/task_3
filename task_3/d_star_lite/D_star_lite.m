@@ -83,7 +83,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
         % If map had changes (new info has been obtained)
         if(changes == true)
             % Current node should also be seen as changed????
-            %changed_nodes = [changed_nodes; current_position];
+            changed_nodes = [changed_nodes; current_position];
 
             % Update heuristic estimate distance from start to goal
             k_m = k_m + D_star_heuristic(last_change_position, current_position);
