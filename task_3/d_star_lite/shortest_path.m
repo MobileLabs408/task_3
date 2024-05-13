@@ -51,7 +51,7 @@ function [U, push, pop] = shortest_path(U, start_position, goal_position, g, rhs
                 end
 
                 % Do not update goal node
-                if(preds(s,:) ~= goal_position)
+                if(preds(s,1) ~= goal_position(1) || preds(s,2) ~= goal_position(2))
                     % Update rhs if better path has been found
                     % note that in this implementation c = h
                     rhs(preds(s,1), preds(s,2)) = min(rhs(preds(s,1), preds(s,2)), D_star_heuristic(preds(s,:), node.position) + g(node.position(1), node.position(2)));
@@ -80,21 +80,21 @@ function [U, push, pop] = shortest_path(U, start_position, goal_position, g, rhs
 
                 % If rhs is not consistent?
                 % Note that in this implementation, c = h
-                if(rhs(preds_u(s,1), preds_u(s,2)) == D_star_heuristic(preds(s,:), node.position) + g_old)
+                if(rhs(preds_u(s,1), preds_u(s,2)) == D_star_heuristic(preds_u(s,:), node.position) + g_old)
                     % Unless goal node
-                    if(preds(s,:) ~= goal_position)
+                    if(preds_u(s,1) ~= goal_position(1) || preds_u(s,2) ~= goal_position(2))
                         % Find successors to s
-                        succs = get_neighboring_nodes(preds(s,:));
+                        succs = get_neighboring_nodes(preds_u(s,:));
                         
                         % Find the one which minimizes cost
-                        [min_idx, min_val] = min_cost_neighbor(succs, preds(s,:));
+                        [min_idx, min_val] = min_cost_neighbor(succs, preds_u(s,:));
 
                         % Update rhs value with min cost
-                        rhs(preds(s,1), preds(s,2)) = min_val;                        
+                        rhs(preds_u(s,1), preds_u(s,2)) = min_val;                        
                     end
 
                     % Update vertex
-                    [U, push] = update_vertex(U, start_position, preds(s,:), g, rhs, k_m, push);
+                    [U, push] = update_vertex(U, start_position, preds_u(s,:), g, rhs, k_m, push);
                 end
             end
         end

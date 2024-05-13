@@ -34,10 +34,11 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
     %% Main loop, continue until goal is reached
     % Note that this concerns movement, not search, movement is from start
     % to goal, search is from goal to start, see shortest_path
-    while(current_position ~= goal_position)
+    while(current_position(1) ~= goal_position(1) || current_position(2) ~= goal_position(2))
         % There is no known path to goal
-        if(rhs(current_position) == inf)
-            path = [];
+        if(rhs(current_position(1), current_position(2)) == inf)
+            %path = [];
+            disp("No path found")
             return
         end
 
@@ -46,7 +47,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
         [min_idx, min_val] = min_cost_neighbor(succs, current_position, created_map);
         current_position = succs(min_idx,:);
         % Add current position to path
-        path = [path;current_position];
+        path = [path; current_position];
 
         % Scan graph for changes
         neighbors = get_neighboring_nodes(current_position);
@@ -80,7 +81,7 @@ function [path, push, pop, created_map] = D_star_lite(map, start_position, goal_
                 % Changed node and neighbors
                 changed_node_and_neighbors = get_neighboring_nodes(changed_nodes(s,:));
                 changed_node_and_neighbors = [changed_node_and_neighbors; changed_nodes(s,:)];
-                for s_prim = 1:size(changed_node_and_neighbors,1)
+                for s_prim = 1:size(changed_node_and_neighbors, 1)
                     % Update node
                     [U, push] = update_vertex(U, start_position, changed_node_and_neighbors(s_prim,:), g, rhs, k_m, push);
                 end

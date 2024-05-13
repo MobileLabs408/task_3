@@ -34,6 +34,6 @@ function [U, g, rhs, k_m, push, pop] = initialize_D_star(created_map, start_posi
     % Insert goal node into priority queue
     k = calculate_key(start_position, goal_position, g, rhs, k_m);
     goal_node = struct('position', goal_position,'k1', k(1), 'k2', k(2));
-    U = [U;goal_node];
+    U = [U; goal_node];
 
 end
